@@ -1,4 +1,0 @@
-#Fri Apr 27 13:04:17 CEST 2018
-base.0=D\:\\Android\\SocketClient-master\\SocketClient-master\\app\\build\\intermediates\\transforms\\dexMerger\\debug\\9
-path.0=classes.dex
-renamed.0=classes.dex
