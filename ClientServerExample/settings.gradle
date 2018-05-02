@@ -1,1 +1,1 @@
-include ':mobile', ':things', ':serverside', ':server'
+include ':mobile', ':things', ':serverside', ':server', ':photorecognition'

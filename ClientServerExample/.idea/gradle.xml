@@ -9,6 +9,7 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/mobile" />
+            <option value="$PROJECT_DIR$/photorecognition" />
             <option value="$PROJECT_DIR$/server" />
             <option value="$PROJECT_DIR$/serverside" />
             <option value="$PROJECT_DIR$/things" />
