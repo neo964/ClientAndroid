@@ -33,8 +33,8 @@ public class MainActivity extends Activity{
         }
 
         buttonConnect = (Button) findViewById(R.id.connectButton);
-        buttonMenu = (ImageButton) findViewById(R.id.menuButton);
-        response = (TextView) findViewById(R.id.responseTextView);
+       // buttonMenu = (ImageButton) findViewById(R.id.menuButton);
+        response = (TextView) findViewById(R.id.InfoText);
         client = new Client(response);
 
         final String url = "https://futurestud.io/images/futurestudio-logo-transparent.png";
@@ -43,12 +43,7 @@ public class MainActivity extends Activity{
 
             @Override
             public void onClick(View arg0) {
-
                 client.downloadFile(url);
-               /* Client myClient = new Client(editTextAddress.getText()
-                        .toString(), Integer.parseInt(editTextPort
-                        .getText().toString()), response);
-                myClient.execute();*/
             }
         });
     }
