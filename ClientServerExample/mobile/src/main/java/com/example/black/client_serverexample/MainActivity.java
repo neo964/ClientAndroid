@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
@@ -16,7 +17,8 @@ public class MainActivity extends Activity{
 
     TextView response;
     Button buttonConnect;
-    ImageButton buttonMenu;
+    //ImageButton buttonMenu;
+    NavigationView navigationView;
 
     Client client;
 
@@ -31,9 +33,18 @@ public class MainActivity extends Activity{
             ActivityCompat.requestPermissions(MainActivity.this, new String[]
                     {Manifest.permission.WRITE_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST);
         }
+        if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.MANAGE_DOCUMENTS) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(MainActivity.this, new String[]
+                    {Manifest.permission.MANAGE_DOCUMENTS}, MY_PERMISSIONS_REQUEST);
+        }
+        if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.INTERNET) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(MainActivity.this, new String[]
+                    {Manifest.permission.INTERNET}, MY_PERMISSIONS_REQUEST);
+        }
 
         buttonConnect = (Button) findViewById(R.id.connectButton);
        // buttonMenu = (ImageButton) findViewById(R.id.menuButton);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
         response = (TextView) findViewById(R.id.InfoText);
         client = new Client(response);
 
@@ -46,6 +57,8 @@ public class MainActivity extends Activity{
                 client.downloadFile(url);
             }
         });
+
+
     }
 
     public void OpenMenu (View view){

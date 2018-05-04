@@ -2,19 +2,34 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 27
+
+    lintOptions {
+        abortOnError false
+    }
+
     defaultConfig {
         applicationId "com.example.black.client_serverexample"
-        minSdkVersion 15
+        minSdkVersion 19
         targetSdkVersion 27
         versionCode 1
         versionName "1.0"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-    }
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+
+        sourceSets {
+            main {
+                assets.srcDirs = ['./assets']
+            }
+        }//testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+
+    aaptOptions {
+        noCompress "tflite"
     }
 }
 
@@ -33,5 +48,6 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.2'
     implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
     implementation "com.firebase:firebase-jobdispatcher:0.8.5"
+    implementation 'org.tensorflow:tensorflow-lite:+'
 
 }

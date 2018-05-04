@@ -1,6 +1,11 @@
 package com.example.black.client_serverexample;
 
 import android.content.ClipData;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.Image;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -13,11 +18,17 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import java.io.FileNotFoundException;
 
 public class MenuActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     ClipData.Item item1;
+    TextView textTargetUri = null;
+    ImageView targetImage = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +54,9 @@ public class MenuActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        textTargetUri = (TextView) findViewById(R.id.textView2);
+        targetImage = (ImageView) findViewById(R.id.imageView2);
     }
 
     @Override
@@ -82,15 +96,19 @@ public class MenuActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-
+        Intent intent = null;
         if (id == R.id.nav_camera) {
+            intent = new Intent(this, ImageClassifierActivity.class);
+            startActivityForResult(intent, 0);
             // Handle the camera action
         } else if (id == R.id.nav_gallery) {
-
+            intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            startActivityForResult(intent, 0);
         } else if (id == R.id.nav_slideshow) {
 
         } else if (id == R.id.nav_manage) {
-
+            intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
         } else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_send) {
@@ -100,5 +118,27 @@ public class MenuActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // TODO Auto-generated method stub
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == RESULT_OK){
+            Uri targetUri = data.getData();
+            textTargetUri.setText(targetUri.toString());
+            Bitmap bitmap;
+            try {
+                bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(targetUri));
+                Intent intent = new Intent(this, ImageClassifierActivity.class);
+                PhotoClassifier photoClassifier = new PhotoClassifier();
+                String result = photoClassifier.onPhotoReady (bitmap);
+                textTargetUri.setText(result);
+                targetImage.setImageBitmap(bitmap);
+            } catch (FileNotFoundException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
     }
 }
