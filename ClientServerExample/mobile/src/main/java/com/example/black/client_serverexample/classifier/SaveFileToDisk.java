@@ -66,9 +66,8 @@ public class SaveFileToDisk {
 
     public boolean saveImage (Bitmap bitmap) {
         try {
-            date = new Date(System.currentTimeMillis());
             //TODO Here to change the directory
-            File capture = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "capture:" + date + ".png");
+            File capture = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), bitmap.toString() + ".png");
 
             FileOutputStream out = null;
             try {

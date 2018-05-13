@@ -5,6 +5,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
+import android.util.Log;
 
 import com.example.black.client_serverexample.MenuActivity;
 import com.example.black.client_serverexample.R;
@@ -23,16 +24,30 @@ public class MessageReceiver extends FirebaseMessagingService {
     public void onMessageReceived(RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
         //Server side
-        final String title = remoteMessage.getData().get("title");
+       /*
+       final String title = remoteMessage.getData().get("title");
         final String message = remoteMessage.getData().get("body");
+        */
 
-        /*
-        Client Side
+      //  Client Side
+        Log.d("From: ", remoteMessage.getFrom());
         String title = remoteMessage.getNotification().getTitle();
         String message = remoteMessage.getNotification().getBody();
-         */
 
-        showNotifications (title, message);
+        if (remoteMessage.getData().size() > 0) {
+            Log.d("Message data payload: ", remoteMessage.getData().toString());
+
+        }
+
+        // Check if message contains a notification payload.
+        if (remoteMessage.getNotification() != null) {
+            Log.d("Notification Body: ", remoteMessage.getNotification().getBody());
+        }
+
+        // Also if you intend on generating your own notifications as a result of a received FCM
+        // message, here is where that should be initiated. See sendNotification method below.
+
+    showNotifications (title, message);
     }
 
     private void showNotifications (String title, String msg){

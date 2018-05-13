@@ -1,10 +1,8 @@
 package com.example.black.client_serverexample;
 
-import android.content.ClipData;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -22,8 +20,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.example.black.client_serverexample.Notification.InstanceIdService;
 import com.example.black.client_serverexample.classifier.SaveFileToDisk;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -33,12 +29,11 @@ import java.io.FileNotFoundException;
 public class MenuActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    TextView textTargetUri = null;
+    static TextView textTargetUri = null;
     ImageView targetImage = null;
     final int REQUEST_IMAGE_CAPTURE = 1;
     final int REQUEST_GALLERY_CAPTURE = 2;
     static Bitmap staticBitmap = null;
-    static String result;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -158,7 +153,6 @@ public class MenuActivity extends AppCompatActivity
                 e.printStackTrace();
             }
         }
-        textTargetUri.setText(result);
         Intent intent = new Intent(this, ImageClassifierActivity.class);
         startActivity(intent);
     }
