@@ -7,8 +7,10 @@ import android.graphics.BitmapFactory;
 import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -21,14 +23,22 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.black.client_serverexample.Notification.InstanceIdService;
+import com.example.black.client_serverexample.classifier.SaveFileToDisk;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.iid.FirebaseInstanceId;
+
 import java.io.FileNotFoundException;
 
 public class MenuActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    ClipData.Item item1;
     TextView textTargetUri = null;
     ImageView targetImage = null;
+    final int REQUEST_IMAGE_CAPTURE = 1;
+    final int REQUEST_GALLERY_CAPTURE = 2;
+    static Bitmap staticBitmap = null;
+    static String result;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,23 +108,27 @@ public class MenuActivity extends AppCompatActivity
         int id = item.getItemId();
         Intent intent = null;
         if (id == R.id.nav_camera) {
-            intent = new Intent(this, ImageClassifierActivity.class);
-            startActivityForResult(intent, 0);
-            // Handle the camera action
+            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+                }
         } else if (id == R.id.nav_gallery) {
             intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-            startActivityForResult(intent, 0);
+            startActivityForResult(intent, REQUEST_GALLERY_CAPTURE);
         } else if (id == R.id.nav_slideshow) {
 
         } else if (id == R.id.nav_manage) {
             intent = new Intent(this, MainActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_share) {
+            /*InstanceIdService idService = new InstanceIdService();
+            idService.onTokenRefresh();*/
 
         } else if (id == R.id.nav_send) {
-
+            FirebaseApp.initializeApp(this);
+            String token = FirebaseInstanceId.getInstance().getToken();
+            Log.v("Token: ",token );
         }
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
@@ -124,21 +138,28 @@ public class MenuActivity extends AppCompatActivity
         // TODO Auto-generated method stub
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (resultCode == RESULT_OK){
+
+        Log.v("Request Code", " : " + requestCode);
+        Log.v("Result Code", " : " + resultCode);
+
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            Bundle extras = data.getExtras();
+            staticBitmap = (Bitmap) extras.get("data");
+            targetImage.setImageBitmap(staticBitmap);
+            SaveFileToDisk saveFileToDisk = new SaveFileToDisk();
+            saveFileToDisk.saveImage(staticBitmap);
+        }else if (requestCode == REQUEST_GALLERY_CAPTURE && resultCode == RESULT_OK){
             Uri targetUri = data.getData();
-            textTargetUri.setText(targetUri.toString());
-            Bitmap bitmap;
             try {
-                bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(targetUri));
-                Intent intent = new Intent(this, ImageClassifierActivity.class);
-                PhotoClassifier photoClassifier = new PhotoClassifier();
-                String result = photoClassifier.onPhotoReady (bitmap);
-                textTargetUri.setText(result);
-                targetImage.setImageBitmap(bitmap);
+                staticBitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(targetUri));
+                targetImage.setImageBitmap(staticBitmap);
             } catch (FileNotFoundException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
         }
+        textTargetUri.setText(result);
+        Intent intent = new Intent(this, ImageClassifierActivity.class);
+        startActivity(intent);
     }
 }

@@ -9,10 +9,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Date;
 
 import okhttp3.ResponseBody;
 
 public class SaveFileToDisk {
+
+    Date date;
 
     public boolean writeResponseBodyToDisk (ResponseBody body){
         try {
@@ -63,8 +66,9 @@ public class SaveFileToDisk {
 
     public boolean saveImage (Bitmap bitmap) {
         try {
+            date = new Date(System.currentTimeMillis());
             //TODO Here to change the directory
-            File capture = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "capture.png");
+            File capture = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "capture:" + date + ".png");
 
             FileOutputStream out = null;
             try {
