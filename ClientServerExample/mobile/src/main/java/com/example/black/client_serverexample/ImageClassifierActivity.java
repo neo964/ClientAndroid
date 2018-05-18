@@ -12,6 +12,8 @@ import android.view.WindowManager;
 import com.example.black.client_serverexample.classifier.Recognition;
 import com.example.black.client_serverexample.classifier.TensorFlowHelper;
 import org.tensorflow.lite.Interpreter;
+
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -32,9 +34,10 @@ public class ImageClassifierActivity extends Activity {
     private static final int DIM_BATCH_SIZE = 1;
     private static final int DIM_PIXEL_SIZE = 3;
     /** TF model asset files */
-    private static final String LABELS_FILE = "labels.txt";
-    private static final String MODEL_FILE = "mobilenet_quant_v1_224.tflite";
+    private static final String LABELS_FILE = "labels/labels.txt";
+    private static final String MODEL_FILE = "models/mobilenet_quant_v1_224.tflite";
     private static final String RESULT_FILE = "Result.csv";
+    private static final String ca = String.valueOf(R.string.empty_result);
 
     String partialResult = "Not Recognized";
 
@@ -59,6 +62,8 @@ public class ImageClassifierActivity extends Activity {
     }
 
     private void doRecognize(Bitmap image) {
+        Log.e("PRova ", ca);
+
         // Allocate space for the inference results
         byte[][] confidencePerLabel = new byte[1][mLabels.size()];
         // Allocate buffer for image pixels.
@@ -101,11 +106,18 @@ public class ImageClassifierActivity extends Activity {
         }
         String path = this.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS) + "Result.csv";
 
+        File file = new File(path);
+        try {
+            file.createNewFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         FileWriter writer;
         try {
             writer = new FileWriter(path, true);
             PrintWriter printer = new PrintWriter(writer);
-            String s = MenuActivity.staticBitmap.toString() + ":" + partialResult + ".";
+            String s = MenuActivity.path + ":" + partialResult + ";" + "\n";
 
             printer.append(s);
             printer.close();

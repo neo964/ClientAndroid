@@ -1,15 +1,17 @@
 package com.example.black.client_serverexample;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
@@ -22,30 +24,39 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
+
+import com.example.black.client_serverexample.Utility.ReaderCSV;
 import com.example.black.client_serverexample.classifier.SaveFileToDisk;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.ArrayList;
 
-public class MenuActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+public class MenuActivity extends Activity {
 
     static TextView textTargetUri = null;
     ImageView targetImage = null;
     final int REQUEST_IMAGE_CAPTURE = 1;
     final int REQUEST_GALLERY_CAPTURE = 2;
     static Bitmap staticBitmap = null;
+    static String path = null;
     Button galleryButton;
     Button updateButton;
+    Button csvButton;
     private  static final int MY_PERMISSIONS_REQUEST = 100;
+    AssetManager manager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        manager = getAssets();
         setMenu();
     }
 
@@ -81,7 +92,7 @@ public class MenuActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
+    /*@SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
@@ -104,7 +115,7 @@ public class MenuActivity extends AppCompatActivity
             /*InstanceIdService idService = new InstanceIdService();
             idService.onTokenRefresh();*/
 
-        } else if (id == R.id.nav_send) {
+       /* } else if (id == R.id.nav_send) {
             FirebaseApp.initializeApp(this);
             String token = FirebaseInstanceId.getInstance().getToken();
             Log.v("Token: ",token );
@@ -112,7 +123,7 @@ public class MenuActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
-    }
+    }*/
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         // TODO Auto-generated method stub
@@ -128,15 +139,17 @@ public class MenuActivity extends AppCompatActivity
 
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             Bundle extras = data.getExtras();
-            staticBitmap = (Bitmap) extras.get("data");
-            targetImage.setImageBitmap(staticBitmap);
             SaveFileToDisk saveFileToDisk = new SaveFileToDisk();
             saveFileToDisk.saveImage(staticBitmap);
+            staticBitmap = (Bitmap) extras.get("data");
+            targetImage.setImageBitmap(staticBitmap);
+            path = new String(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + staticBitmap.toString() + ".png");
         }else if (requestCode == REQUEST_GALLERY_CAPTURE && resultCode == RESULT_OK){
             Uri targetUri = data.getData();
             try {
                 staticBitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(targetUri));
                 targetImage.setImageBitmap(staticBitmap);
+                path = targetUri.getPath();
             } catch (FileNotFoundException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
@@ -153,12 +166,13 @@ public class MenuActivity extends AppCompatActivity
     private void setMenu (){
         setContentView(R.layout.activity_menu);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+       // setSupportActionBar(toolbar);
 
         toolbar.setTitle("Home");
 
         galleryButton = (Button) findViewById(R.id.GalleryButton);
         updateButton = (Button) findViewById(R.id.UpdateButton);
+        csvButton = (Button) findViewById(R.id.CSVButton);
 
         galleryButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -171,7 +185,15 @@ public class MenuActivity extends AppCompatActivity
         updateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setContentView(R.layout.activity_main);
+                goToModels();
+               // setContentView(R.layout.activity_main);
+            }
+        });
+
+        csvButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToCSV();
             }
         });
 
@@ -199,7 +221,39 @@ public class MenuActivity extends AppCompatActivity
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+      /*  NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);*/
+    }
+
+    public void goToCSV (){
+        Intent intent = new Intent(this, ReaderCSV.class);
+        startActivity(intent);
+
+    }
+
+    public void goToModels (){
+        ArrayList <String> files = getModels();
+
+        setContentView(R.layout.activity_models);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarmodel);
+      //  setSupportActionBar(toolbar);
+
+        toolbar.setTitle("Models Available");
+        ArrayAdapter <String> arrayAdapter = new ArrayAdapter<String>(this, R.layout.content_models, files);
+        ListView listView = (ListView) findViewById(R.id.list);
+        listView.setAdapter(arrayAdapter);
+    }
+
+    public ArrayList<String> getModels () {
+        try {
+            String[] listss = manager.list("models");
+            for (int i = 0; i < listss.length; ++i) {
+                Log.e("FILE:", "models" + "/" + listss[i]);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }
