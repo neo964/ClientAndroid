@@ -44,7 +44,6 @@ public class MainActivity extends Activity{
 
         buttonConnect = (Button) findViewById(R.id.connectButton);
        // buttonMenu = (ImageButton) findViewById(R.id.menuButton);
-        navigationView = (NavigationView) findViewById(R.id.nav_view);
         response = (TextView) findViewById(R.id.InfoText);
         client = new Client(response);
 

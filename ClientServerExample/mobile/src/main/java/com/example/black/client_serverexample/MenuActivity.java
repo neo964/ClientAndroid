@@ -60,78 +60,13 @@ public class MenuActivity extends Activity {
         setMenu();
     }
 
-    @Override
-    public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    /*@SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-        Intent intent = null;
-        if (id == R.id.nav_camera) {
-            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-                }
-        } else if (id == R.id.nav_gallery) {
-            intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-            startActivityForResult(intent, REQUEST_GALLERY_CAPTURE);
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-            intent = new Intent(MenuActivity.this, MainActivity.class);
-            startActivity(intent);
-        } else if (id == R.id.nav_share) {
-            /*InstanceIdService idService = new InstanceIdService();
-            idService.onTokenRefresh();*/
-
-       /* } else if (id == R.id.nav_send) {
-            FirebaseApp.initializeApp(this);
-            String token = FirebaseInstanceId.getInstance().getToken();
-            Log.v("Token: ",token );
-        }
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
-    }*/
-
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         // TODO Auto-generated method stub
         super.onActivityResult(requestCode, resultCode, data);
         setContentView(R.layout.activity_recognition);
 
-        textTargetUri = (TextView) findViewById(R.id.textView2);
-        targetImage = (ImageView) findViewById(R.id.imageView2);
+        textTargetUri = (TextView) findViewById(R.id.textViewRecognition);
+        targetImage = (ImageView) findViewById(R.id.imageViewRecognition);
 
 
         Log.v("Request Code", " : " + requestCode);
@@ -215,14 +150,6 @@ public class MenuActivity extends Activity {
             }
         });
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
-
-      /*  NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);*/
     }
 
     public void goToCSV (){
@@ -236,10 +163,10 @@ public class MenuActivity extends Activity {
 
         setContentView(R.layout.activity_models);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarmodel);
+       // Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarmodel);
       //  setSupportActionBar(toolbar);
 
-        toolbar.setTitle("Models Available");
+      //  toolbar.setTitle("Models Available");
         ArrayAdapter <String> arrayAdapter = new ArrayAdapter<String>(this, R.layout.content_models, files);
         ListView listView = (ListView) findViewById(R.id.list);
         listView.setAdapter(arrayAdapter);

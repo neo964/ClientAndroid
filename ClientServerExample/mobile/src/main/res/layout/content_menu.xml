@@ -5,8 +5,8 @@
     android:layout_height="match_parent">
 
     <Button
-        android:id="@+id/galleryButton"
-        android:layout_width="150"
+        android:id="@+id/GalleryButton"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="50dp"
         android:text="Gallery"
@@ -15,8 +15,8 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/updateButton"
-        android:layout_width="150"
+        android:id="@+id/UpdateButton"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="150dp"
         android:text="Update"
@@ -25,8 +25,8 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/csvButton"
-        android:layout_width="150"
+        android:id="@+id/CSVButton"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="250dp"
         android:text="CSV"

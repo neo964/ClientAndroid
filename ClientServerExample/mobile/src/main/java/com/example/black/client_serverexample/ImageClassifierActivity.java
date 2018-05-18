@@ -90,7 +90,7 @@ public class ImageClassifierActivity extends Activity {
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-        setContentView(R.layout.activity_camera);
+        //setContentView(R.layout.activity_camera);
         initClassifier();
         doRecognize(MenuActivity.staticBitmap);
 

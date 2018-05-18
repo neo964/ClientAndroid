@@ -25,11 +25,11 @@ public class ReaderCSVActivity extends Activity {
         ReaderCSV readerCSV = new ReaderCSV(this.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS) + "Result.csv");
 
         setContentView(R.layout.activity_csv);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarcsv);
+       // Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarcsv);
         //setSupportActionBar(toolbar);
 
-        toolbar.setTitle("CSV");
-        TextView textView = (TextView) findViewById(R.id.textView3);
+       // toolbar.setTitle("CSV");
+        TextView textView = (TextView) findViewById(R.id.textViewCSV);
         textView.setText(readerCSV.getText());
     }
 }
