@@ -41,8 +41,8 @@ import java.util.ArrayList;
 
 public class MenuActivity extends Activity {
 
-    static TextView textTargetUri = null;
-    ImageView targetImage = null;
+    /*static TextView textTargetUri = null;
+    ImageView targetImage = null;*/
     final int REQUEST_IMAGE_CAPTURE = 1;
     final int REQUEST_GALLERY_CAPTURE = 2;
     static Bitmap staticBitmap = null;
@@ -63,10 +63,10 @@ public class MenuActivity extends Activity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         // TODO Auto-generated method stub
         super.onActivityResult(requestCode, resultCode, data);
-        setContentView(R.layout.activity_recognition);
+        //setContentView(R.layout.activity_recognition);
 
-        textTargetUri = (TextView) findViewById(R.id.textViewRecognition);
-        targetImage = (ImageView) findViewById(R.id.imageViewRecognition);
+      /*  textTargetUri = findViewById(R.id.textRecognition);
+        targetImage = findViewById(R.id.imageViewRecognition);*/
 
 
         Log.v("Request Code", " : " + requestCode);
@@ -77,13 +77,11 @@ public class MenuActivity extends Activity {
             SaveFileToDisk saveFileToDisk = new SaveFileToDisk();
             saveFileToDisk.saveImage(staticBitmap);
             staticBitmap = (Bitmap) extras.get("data");
-            targetImage.setImageBitmap(staticBitmap);
             path = new String(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + staticBitmap.toString() + ".png");
         }else if (requestCode == REQUEST_GALLERY_CAPTURE && resultCode == RESULT_OK){
             Uri targetUri = data.getData();
             try {
                 staticBitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(targetUri));
-                targetImage.setImageBitmap(staticBitmap);
                 path = targetUri.getPath();
             } catch (FileNotFoundException e) {
                 // TODO Auto-generated catch block
@@ -92,10 +90,6 @@ public class MenuActivity extends Activity {
         }
         Intent intent = new Intent(MenuActivity.this, ImageClassifierActivity.class);
         startActivity(intent);
-    }
-
-    public void returnToMainPage (View view){
-        setMenu();
     }
 
     private void setMenu (){
@@ -120,7 +114,9 @@ public class MenuActivity extends Activity {
         updateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                goToModels();
+                Intent intent = new Intent(MenuActivity.this, MainActivity.class);
+                startActivity(intent);
+               // goToModels();
                // setContentView(R.layout.activity_main);
             }
         });
@@ -128,7 +124,8 @@ public class MenuActivity extends Activity {
         csvButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                goToCSV();
+                Intent intent = new Intent(MenuActivity.this, ReaderCSVActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -150,26 +147,6 @@ public class MenuActivity extends Activity {
             }
         });
 
-    }
-
-    public void goToCSV (){
-        Intent intent = new Intent(this, ReaderCSV.class);
-        startActivity(intent);
-
-    }
-
-    public void goToModels (){
-        ArrayList <String> files = getModels();
-
-        setContentView(R.layout.activity_models);
-
-       // Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarmodel);
-      //  setSupportActionBar(toolbar);
-
-      //  toolbar.setTitle("Models Available");
-        ArrayAdapter <String> arrayAdapter = new ArrayAdapter<String>(this, R.layout.content_models, files);
-        ListView listView = (ListView) findViewById(R.id.list);
-        listView.setAdapter(arrayAdapter);
     }
 
     public ArrayList<String> getModels () {

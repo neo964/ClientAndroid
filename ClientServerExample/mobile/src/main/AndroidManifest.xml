@@ -45,6 +45,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".UpdateActivity"
+            android:label="Update"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".ReaderCSVActivity"
+            android:label="CSV"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
 
         <service android:name=".Notification.MessageReceiver">
             <intent-filter>
@@ -56,11 +64,6 @@
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
-
-        <activity
-            android:name=".UpdateActivity"
-            android:label="@string/title_activity_update"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

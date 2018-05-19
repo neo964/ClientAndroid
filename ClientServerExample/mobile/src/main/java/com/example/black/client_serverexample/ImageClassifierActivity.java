@@ -9,6 +9,9 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.WindowManager;
+import android.widget.ImageView;
+import android.widget.TextView;
+
 import com.example.black.client_serverexample.classifier.Recognition;
 import com.example.black.client_serverexample.classifier.TensorFlowHelper;
 import org.tensorflow.lite.Interpreter;
@@ -34,12 +37,14 @@ public class ImageClassifierActivity extends Activity {
     private static final int DIM_BATCH_SIZE = 1;
     private static final int DIM_PIXEL_SIZE = 3;
     /** TF model asset files */
-    private static final String LABELS_FILE = "labels/labels.txt";
-    private static final String MODEL_FILE = "models/mobilenet_quant_v1_224.tflite";
+    private static final String LABELS_FILE = "labels.txt";
+    private static final String MODEL_FILE = "mobilenet_quant_v1_224.tflite";
     private static final String RESULT_FILE = "Result.csv";
     private static final String ca = String.valueOf(R.string.empty_result);
 
     String partialResult = "Not Recognized";
+    TextView textTargetUri = null;
+    ImageView targetImage = null;
 
 
 
@@ -95,8 +100,14 @@ public class ImageClassifierActivity extends Activity {
         doRecognize(MenuActivity.staticBitmap);
 
         saveResultOnFile ();
+        setContentView(R.layout.activity_recognition);
+        textTargetUri = findViewById(R.id.textRecognition);
+        textTargetUri.setText(partialResult);
 
-        onBackPressed();
+        targetImage = findViewById(R.id.imageViewRecognition);
+        targetImage.setImageBitmap(MenuActivity.staticBitmap);
+
+       // onBackPressed();
     }
 
     private void saveResultOnFile() {
@@ -129,7 +140,7 @@ public class ImageClassifierActivity extends Activity {
 
     private void formatResults(Collection<Recognition> results) {
         if (results == null || results.isEmpty()) {
-            MenuActivity.textTargetUri.setText("Not Recognized");
+           // MenuActivity.textTargetUri.setText("Not Recognized");
         } else {
             StringBuilder sb = new StringBuilder();
             Iterator<Recognition> it = results.iterator();
@@ -145,7 +156,8 @@ public class ImageClassifierActivity extends Activity {
                 }
             }
             partialResult = sb.toString();
-            MenuActivity.textTargetUri.setText(partialResult);
+           // MenuActivity.textTargetUri.setText(partialResult);
+          //  Log.e("Result  ", MenuActivity.textTargetUri.getText().toString());
         }
     }
 

@@ -6,7 +6,8 @@
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".UpdateActivity"
-    tools:showIn="@layout/activity_update">
+    tools:showIn="@layout/activity_update"
+    android:background="@drawable/my_gradient">
 
     <ListView
         android:id="@+id/list"
