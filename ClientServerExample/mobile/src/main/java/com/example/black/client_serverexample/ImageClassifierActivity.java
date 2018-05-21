@@ -1,13 +1,17 @@
 package com.example.black.client_serverexample;
 import android.Manifest;
 import android.app.Activity;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.MediaStore;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -106,6 +110,22 @@ public class ImageClassifierActivity extends Activity {
 
         targetImage = findViewById(R.id.imageViewRecognition);
         targetImage.setImageBitmap(MenuActivity.staticBitmap);
+
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fabRecognition);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (ContextCompat.checkSelfPermission(ImageClassifierActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(ImageClassifierActivity.this, new String[]
+                            {Manifest.permission.CAMERA}, MY_PERMISSIONS_REQUEST);
+                }
+
+                Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                if (takePictureIntent.resolveActivity(getPackageManager()) != null && takePictureIntent != null) {
+                    startActivityForResult(takePictureIntent, 1);
+                }
+            }
+        });
 
        // onBackPressed();
     }

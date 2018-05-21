@@ -41,8 +41,6 @@ import java.util.ArrayList;
 
 public class MenuActivity extends Activity {
 
-    /*static TextView textTargetUri = null;
-    ImageView targetImage = null;*/
     final int REQUEST_IMAGE_CAPTURE = 1;
     final int REQUEST_GALLERY_CAPTURE = 2;
     static Bitmap staticBitmap = null;
@@ -63,39 +61,32 @@ public class MenuActivity extends Activity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         // TODO Auto-generated method stub
         super.onActivityResult(requestCode, resultCode, data);
-        //setContentView(R.layout.activity_recognition);
 
-      /*  textTargetUri = findViewById(R.id.textRecognition);
-        targetImage = findViewById(R.id.imageViewRecognition);*/
-
-
-        Log.v("Request Code", " : " + requestCode);
-        Log.v("Result Code", " : " + resultCode);
-
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            Bundle extras = data.getExtras();
-            SaveFileToDisk saveFileToDisk = new SaveFileToDisk();
-            saveFileToDisk.saveImage(staticBitmap);
-            staticBitmap = (Bitmap) extras.get("data");
-            path = new String(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + staticBitmap.toString() + ".png");
-        }else if (requestCode == REQUEST_GALLERY_CAPTURE && resultCode == RESULT_OK){
-            Uri targetUri = data.getData();
-            try {
-                staticBitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(targetUri));
-                path = targetUri.getPath();
-            } catch (FileNotFoundException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+        if (resultCode == RESULT_OK) {
+            if (requestCode == REQUEST_IMAGE_CAPTURE) {
+                Bundle extras = data.getExtras();
+                SaveFileToDisk saveFileToDisk = new SaveFileToDisk();
+                saveFileToDisk.saveImage(staticBitmap);
+                staticBitmap = (Bitmap) extras.get("data");
+                path = new String(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + staticBitmap.toString() + ".png");
+            } else if (requestCode == REQUEST_GALLERY_CAPTURE) {
+                Uri targetUri = data.getData();
+                try {
+                    staticBitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(targetUri));
+                    path = targetUri.getPath();
+                } catch (FileNotFoundException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
             }
+            Intent intent = new Intent(MenuActivity.this, ImageClassifierActivity.class);
+            startActivity(intent);
         }
-        Intent intent = new Intent(MenuActivity.this, ImageClassifierActivity.class);
-        startActivity(intent);
     }
 
     private void setMenu (){
         setContentView(R.layout.activity_menu);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-       // setSupportActionBar(toolbar);
 
         toolbar.setTitle("Home");
 
@@ -107,7 +98,9 @@ public class MenuActivity extends Activity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(intent, REQUEST_GALLERY_CAPTURE);
+                if (intent != null) {
+                    startActivityForResult(intent, REQUEST_GALLERY_CAPTURE);
+                }
             }
         });
 
@@ -115,9 +108,9 @@ public class MenuActivity extends Activity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MenuActivity.this, MainActivity.class);
-                startActivity(intent);
-               // goToModels();
-               // setContentView(R.layout.activity_main);
+                if (intent != null) {
+                    startActivity(intent);
+                }
             }
         });
 
@@ -125,7 +118,9 @@ public class MenuActivity extends Activity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MenuActivity.this, ReaderCSVActivity.class);
-                startActivity(intent);
+                if (intent != null) {
+                    startActivity(intent);
+                }
             }
         });
 
@@ -139,7 +134,7 @@ public class MenuActivity extends Activity {
                 }
 
                 Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+                if (takePictureIntent.resolveActivity(getPackageManager()) != null && takePictureIntent != null) {
                     startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
                 }
                /* Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
